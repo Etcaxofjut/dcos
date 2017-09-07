@@ -29,9 +29,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 @pytest.fixture(autouse=True)
 def clean_marathon_state(dcos_api_session):
-    dcos_api_session.marathon.purge()
     yield
-    dcos_api_session.marathon.purge()
 
 
 @pytest.fixture(scope='session')

@@ -1,10 +1,7 @@
 import collections
-import contextlib
 import json
 import logging
 import random
-import threading
-from collections import deque
 from subprocess import check_output
 
 import pytest
@@ -17,7 +14,7 @@ from dcos_test_utils import marathon
 
 log = logging.getLogger(__name__)
 
-GLOBAL_PORT_POOL = collections.defaultdict(lambda: list(range(10000, 32000)))
+GLOBAL_PORT_POOL = collections.defaultdict(lambda: list(range(10000, 30000)))
 
 
 def unused_port(network):
@@ -71,7 +68,7 @@ def generate_vip_app_permutations():
     return [(container, vip_net, proxy_net)
             for container in [marathon.Container.NONE, marathon.Container.MESOS, marathon.Container.DOCKER]
             for vip_net in [marathon.Network.USER, marathon.Network.BRIDGE, marathon.Network.HOST]
-            for proxy_net in [marathon.Network.USER, marathon.Network.BRIDGE, marathon.Network.HOST]
+            for proxy_net in [marathon.Network.USER]
             # only DOCKER containers support BRIDGE network
             if marathon.Network.BRIDGE not in (vip_net, proxy_net) or container == marathon.Container.DOCKER]
 
@@ -83,10 +80,143 @@ def generate_vip_app_permutations():
 @pytest.mark.parametrize(
     'container,vip_net,proxy_net',
     generate_vip_app_permutations())
-def test_vip(dcos_api_session,
-             container: marathon.Container,
-             vip_net: marathon.Network,
-             proxy_net: marathon.Network):
+def test_vip_0(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_1(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_2(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_3(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_4(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_5(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_6(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_7(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_8(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    not lb_enabled(),
+    reason='Load Balancer disabled')
+@pytest.mark.parametrize(
+    'container,vip_net,proxy_net',
+    generate_vip_app_permutations())
+def test_vip_9(dcos_api_session,
+               container: marathon.Container,
+               vip_net: marathon.Network,
+               proxy_net: marathon.Network):
+    return gen_test_vip(dcos_api_session, container, vip_net, proxy_net)
+
+
+def gen_test_vip(dcos_api_session,
+                 container: marathon.Container,
+                 vip_net: marathon.Network,
+                 proxy_net: marathon.Network):
     '''Test VIPs between the following source and destination configurations:
         * containers: DOCKER, UCR and NONE
         * networks: USER, BRIDGE (docker only), HOST
@@ -117,14 +247,21 @@ def test_vip(dcos_api_session,
             proxy_port = proxy_task_info['ports'][0]
         try:
             ensure_routable(cmd, proxy_host, proxy_port)['test_uuid'] == origin_app['env']['DCOS_TEST_UUID']
-        except Exception as e:
-            log.error('Exception: {}'.format(e))
-            errors = errors + 1
-        finally:
+
             log.info('Purging application: {}'.format(origin_app['id']))
             dcos_api_session.marathon.delete('v2/apps/{}'.format(origin_app['id'])).raise_for_status()
             log.info('Purging application: {}'.format(proxy_app['id']))
             dcos_api_session.marathon.delete('v2/apps/{}'.format(proxy_app['id'])).raise_for_status()
+        except Exception as e:
+            log.error('Exception: {}'.format(e))
+
+            ip = check_output(['/opt/mesosphere/bin/detect_ip']).decode().strip()
+            state = requests.get('http://{}:5050/state'.format(ip)).text
+            log.info("MESOS STATE: {}".format(state))
+
+            errors = errors + 1
+        finally:
+            pass
     assert errors == 0
 
 
@@ -181,53 +318,6 @@ def wait_for_tasks_healthy(dcos_api_session, app_definition):
 
 
 @retrying.retry(wait_fixed=2000,
-                stop_max_delay=120 * 1000,
-                retry_on_exception=lambda x: True)
-def test_if_overlay_ok(dcos_api_session):
-    def _check_overlay(hostname, port):
-        overlays = dcos_api_session.get('overlay-agent/overlay', host=hostname, port=port).json()['overlays']
-        assert len(overlays) > 0
-        for overlay in overlays:
-            assert overlay['state']['status'] == 'STATUS_OK'
-
-    for master in dcos_api_session.masters:
-        _check_overlay(master, 5050)
-    for slave in dcos_api_session.all_slaves:
-        _check_overlay(slave, 5051)
-
-
-@pytest.mark.skipif(lb_enabled(), reason='Load Balancer enabled')
-def test_if_navstar_l4lb_disabled(dcos_api_session):
-    '''Test to make sure navstar_l4lb is disabled'''
-    data = check_output(['/usr/bin/env', 'ip', 'rule'])
-    # Minuteman creates this ip rule: `9999: from 9.0.0.0/8 lookup 42`
-    # We check it doesn't exist
-    assert str(data).find('9999') == -1
-
-
-def test_ip_per_container(dcos_api_session):
-    '''Test if we are able to connect to a task with ip-per-container mode
-    '''
-    # Launch the test_server in ip-per-container mode (user network)
-    app_definition, test_uuid = test_helpers.marathon_test_app(
-        healthcheck_protocol=marathon.Healthcheck.MESOS_HTTP,
-        container_type=marathon.Container.DOCKER,
-        network=marathon.Network.USER,
-        host_port=9080)
-
-    assert len(dcos_api_session.slaves) >= 2, 'IP Per Container tests require 2 private agents to work'
-
-    app_definition['instances'] = 2
-    app_definition['constraints'] = [['hostname', 'UNIQUE']]
-
-    with dcos_api_session.marathon.deploy_and_cleanup(app_definition, check_health=True):
-        service_points = dcos_api_session.marathon.get_app_service_endpoints(app_definition['id'])
-        app_port = app_definition['container']['docker']['portMappings'][0]['containerPort']
-        cmd = '/opt/mesosphere/bin/curl -s -f -m 5 http://{}:{}/ping'.format(service_points[1].ip, app_port)
-        ensure_routable(cmd, service_points[0].host, service_points[0].port)
-
-
-@retrying.retry(wait_fixed=2000,
                 stop_max_delay=100 * 2000,
                 retry_on_exception=lambda x: True)
 def geturl(url):
@@ -236,56 +326,3 @@ def geturl(url):
     r = rs.json()
     log.info('geturl {} -> {}'.format(url, r))
     return r
-
-
-@pytest.mark.skipif(not lb_enabled(), reason='Load Balancer disabled')
-def test_l4lb(dcos_api_session):
-    '''Test l4lb is load balancing between all the backends
-       * create 5 apps using the same VIP
-       * get uuid from the VIP in parallel from many threads
-       * verify that 5 uuids have been returned
-       * only testing if all 5 are hit at least once
-    '''
-    numapps = 5
-    numthreads = numapps * 4
-    apps = []
-    rvs = deque()
-    backends = []
-    dnsname = 'l4lbtest.marathon.l4lb.thisdcos.directory:5000'
-    with contextlib.ExitStack() as stack:
-        for _ in range(numapps):
-            origin_app, origin_uuid = \
-                test_helpers.marathon_test_app(
-                    healthcheck_protocol=marathon.Healthcheck.MESOS_HTTP)
-            # same vip for all the apps
-            origin_app['portDefinitions'][0]['labels'] = {'VIP_0': '/l4lbtest:5000'}
-            apps.append(origin_app)
-            stack.enter_context(dcos_api_session.marathon.deploy_and_cleanup(origin_app))
-            sp = dcos_api_session.marathon.get_app_service_endpoints(origin_app['id'])
-            backends.append({'port': sp[0].port, 'ip': sp[0].host})
-            # make sure that the service point responds
-            geturl('http://{}:{}/ping'.format(sp[0].host, sp[0].port))
-            # make sure that the VIP is responding too
-            geturl('http://{}/ping'.format(dnsname))
-        vips = geturl("http://localhost:62080/v1/vips")
-        [vip] = [vip for vip in vips if vip['vip'] == dnsname and vip['protocol'] == 'tcp']
-        for backend in vip['backend']:
-            backends.remove(backend)
-        assert backends == []
-
-        # do many requests in parallel.
-        def thread_request():
-            # deque is thread safe
-            rvs.append(geturl('http://l4lbtest.marathon.l4lb.thisdcos.directory:5000/test_uuid'))
-
-        threads = [threading.Thread(target=thread_request) for i in range(0, numthreads)]
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join()
-
-    expected_uuids = [a['id'].split('-')[2] for a in apps]
-    received_uuids = [r['test_uuid'] for r in rvs if r is not None]
-    assert len(set(expected_uuids)) == numapps
-    assert len(set(received_uuids)) == numapps
-    assert set(expected_uuids) == set(received_uuids)
