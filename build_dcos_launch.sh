@@ -23,3 +23,4 @@ cp $new_package_name tmp/dcos_build/dcos-launch.tar.xz
 (cd tmp/dcos_build && tar -Jxf dcos-launch.tar.xz)
 cp tmp/dcos_build/dcos-launch .
 rm -rf tmp/dcos_build/
+asdfasdfasdfasdfasf
