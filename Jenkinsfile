@@ -17,7 +17,7 @@ task_wrapper('mesos-sec', master_branches){
     }
 
     stage('Cleanup workspace') {
-        deleteDir()
+        deleteDir()asdfasfasdfa
     }
 
     stage('Checkout') {
